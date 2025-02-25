@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_route/data/api/api_manager.dart';
-import 'package:news_app_route/models/articles_response.dart';
 import 'package:news_app_route/presentaion/home/home_navigator.dart';
 import '../../core/constants/app_assets.dart';
-import '../../core/routing/page_route_name.dart';
+import '../../models/articles_response.dart' show Article;
 import '../../models/category_list_model.dart';
+import '../../models/sourcres_model.dart';
 
 class HomeViewModel extends ChangeNotifier {
   int selectedIndex = 0;
   CategoryListModel? selectedCategory;
-  CategoryListModel? categoryListModel;
 
   void updateIndex(int index) {
     selectedIndex = index;
@@ -18,8 +17,8 @@ class HomeViewModel extends ChangeNotifier {
 
   HomeNavigator? navigator;
 
-  List<Source> sources = [];
-  List<Article> article = [];
+  List<Source> source = [];
+  List<Article> articles = [];
 
   String? errorMessage = "";
 
@@ -57,8 +56,21 @@ class HomeViewModel extends ChangeNotifier {
   Future<void> getSources() async {
     try{
       print("object");
-      var response = await ApiManager.getSources(catId: categoryListModel!.catId);
-      sources = response.sources ?? [];
+      var response = await ApiManager.getSources(catId: selectedCategory!.catId);
+      source = response!.sources ;
+      getArticles(source.first);
+    }catch(e){
+      errorMessage = e.toString();
+    }finally{
+      notifyListeners();
+    }
+  }
+
+  Future<void> getArticles(Source source) async {
+    try{
+      var response = await ApiManager.getArticles(sourceId: source.id);
+      articles = response!.articles;
+      print(articles.length);
     }catch(e){
       errorMessage = e.toString();
     }finally{
