@@ -1,0 +1,2 @@
+D:/flutter_projects/news_app_route/android/app/.cxx/Debug/3h2j6410/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/flutter_projects/news_app_route/android/app/.cxx/Debug/3h2j6410/armeabi-v7a/CMakeFiles/rebuild_cache.dir
