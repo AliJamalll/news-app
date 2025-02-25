@@ -3,6 +3,7 @@ import 'package:news_app_route/presentaion/home/home_view_model.dart';
 import 'package:news_app_route/presentaion/home/taps/home_screen.dart';
 import 'package:news_app_route/presentaion/home/taps/taps.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/routing/page_route_name.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/style.dart';
@@ -99,7 +100,7 @@ class _HomeViewState extends State<HomeView> implements HomeNavigator {
             ),
           ),
           body: homeView.selectedIndex == 1 && homeView.selectedCategory != null
-              ? NewsTaps(viewModel: homeView)
+              ? NewsTaps(viewModel: homeView, )
               : HomeScreen(),
 
         ),
@@ -112,5 +113,82 @@ class _HomeViewState extends State<HomeView> implements HomeNavigator {
     // TODO: implement navigateToSearchScreen
     Navigator.pushNamed(context, Routes.search);
 
+  }
+
+  @override
+  articlesDetailsButtonSheet(article) {
+    showModalBottomSheet(
+      isDismissible: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(8),
+        margin: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (article.urlToImage != null)
+              Container(
+                width: 370,
+                height: 220,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(article.urlToImage!),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Text(
+                    article.title ?? "No Title",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.start,
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final Uri url = Uri.parse(article.url);
+                      if (await canLaunchUrl(url)) {
+                        launchUrl(url, mode: LaunchMode.inAppBrowserView);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Could not open URL")),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      textStyle: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    child: const Text("View Full Article"),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

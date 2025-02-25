@@ -6,7 +6,15 @@ import 'package:news_app_route/models/articles_response.dart';
 import '../../models/sourcres_model.dart';
 
 class ApiManager{
-  static Future<sourcesModel?> getSources({required String catId})async{
+
+  ApiManager._();
+  static ApiManager? apiManager;
+  static get instance{
+    apiManager ??= ApiManager._();
+    return apiManager;
+  }
+
+   Future<sourcesModel?> getSources({required String catId})async{
     var url = Uri.https(ApiConstants.baseUrl,ApiConstants.sources,{
       "category" : catId
     });

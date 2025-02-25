@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_route/data/api/api_manager.dart';
+import 'package:news_app_route/data/repository/contract/articles_repository.dart';
+import 'package:news_app_route/data/repository/contract/sources_repository.dart';
+import 'package:news_app_route/data/repository/impl/sources_repository_impl.dart';
 import 'package:news_app_route/presentaion/home/home_navigator.dart';
 import '../../core/constants/app_assets.dart';
+import '../../data/repository/impl/articles_repository_impl.dart';
 import '../../models/articles_response.dart' show Article;
 import '../../models/category_list_model.dart';
 import '../../models/sourcres_model.dart';
 
 class HomeViewModel extends ChangeNotifier {
+
+  SourcesRepository repository = SourcesRepositoryImpl();
+  ArticlesRepository getRepository = ArticlesRepositoryImpl();
+
   int selectedIndex = 0;
   CategoryListModel? selectedCategory;
 
@@ -56,8 +64,8 @@ class HomeViewModel extends ChangeNotifier {
   Future<void> getSources() async {
     try{
       print("object");
-      var response = await ApiManager.getSources(catId: selectedCategory!.catId);
-      source = response!.sources ;
+      var response = await repository.getSources(catId: categoryList.first.catId);
+      source = response ;
       getArticles(source.first);
     }catch(e){
       errorMessage = e.toString();
@@ -68,8 +76,8 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> getArticles(Source source) async {
     try{
-      var response = await ApiManager.getArticles(sourceId: source.id);
-      articles = response!.articles;
+      var response = await getRepository.getArticles(sourceId: source.id);
+      articles = response;
       print(articles.length);
     }catch(e){
       errorMessage = e.toString();
@@ -77,4 +85,8 @@ class HomeViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // void onCardPress(Article article) {
+  //   navigator!.articlesDetailsButtonSheet(article);
+  // }
 }

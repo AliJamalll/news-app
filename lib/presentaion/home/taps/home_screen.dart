@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           )
-              : NewsTaps(viewModel: homeViewModel),
+              : NewsTaps(viewModel: homeViewModel,),
         );
       },
     );

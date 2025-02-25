@@ -40,6 +40,8 @@ class _NewsTapsState extends State<NewsTaps> {
           child: Column(
             children: [
               TabBar(
+                dividerHeight: 0,
+                tabAlignment: TabAlignment.start,
                 isScrollable: true,
                 onTap: (index) {
                   viewModel.getArticles(viewModel.source[index]);
@@ -247,3 +249,4 @@ class _NewsTapsState extends State<NewsTaps> {
     return "${dateTime.day}/${dateTime.month}/${dateTime.year}";
   }
 }
+
